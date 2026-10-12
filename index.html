@@ -176,8 +176,9 @@ textarea{font:inherit;color:var(--ink);width:100%;resize:vertical;min-height:84p
 .note .rm{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .toast{border-radius:20px;background:#0e1d44;box-shadow:0 14px 40px rgba(8,22,56,.4)}
 
+button,.days button,.chips button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer}
 /* ===== v3: онбординг, значки, тёмная тема ===== */
-#ob{position:fixed;inset:0;z-index:60;overflow:auto;padding:calc(30px + env(safe-area-inset-top,0px)) 18px 30px;background:radial-gradient(ellipse at 20% 0%,rgba(132,177,255,.55),transparent 50%),linear-gradient(160deg,#e9effb,#d9e6fa)}
+#ob{position:fixed;top:0;right:0;bottom:0;left:0;z-index:60;overflow:auto;padding:calc(30px + env(safe-area-inset-top,0px)) 18px 30px;background:radial-gradient(ellipse at 20% 0%,rgba(132,177,255,.55),transparent 50%),linear-gradient(160deg,#e9effb,#d9e6fa)}
 .ob-in{max-width:520px;margin:0 auto}
 .ob-logo{width:76px;height:76px;border-radius:22px;display:grid;place-items:center;color:#fff;font-size:28px;font-weight:900;letter-spacing:-2px;background:linear-gradient(145deg,#2059b7,#0b2a66);box-shadow:0 14px 34px rgba(14,48,110,.3)}
 .ob-in input{margin:6px 0 12px}
@@ -286,6 +287,8 @@ textarea{font:inherit;color:var(--ink);width:100%;resize:vertical;min-height:84p
 
 
 <script>
+window.onerror=function(m,u,l){try{var t=document.getElementById("toast");if(t){t.textContent="Ошибка: "+m+" (строка "+l+"). Сделай скриншот и пришли мне.";t.style.display="block"}}catch(e){}return false};
+
 var $=function(i){return document.getElementById(i)};
 function esc(s){var d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML}
 function ld(k,def){try{var v=localStorage.getItem(k);return v?JSON.parse(v):def}catch(e){return def}}
@@ -398,7 +401,7 @@ function nstate(){var n=$("ns");if(!("Notification" in window)){n.textContent="�
 $("nb").onclick=function(){try{Notification.requestPermission().then(nstate)}catch(e){nstate()}};
 setInterval(check,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)check()});
 drawBells();if(grp){build();$("msg").textContent="Группа "+grp+", пар за неделю: "+lessons.length;$("grp").value=grp}
-head();draw();tab(1);nstate();check();
+head();draw();tab(1);try{nstate()}catch(e){}try{check()}catch(e){}
 
 /* ===== Заметки группы ===== */
 var SHARED={url:"https://oztzraoyefxedeodmnrn.supabase.co/rest/v1/",key:"sb_publishable_maXcKixbhKd8erkQEjje1Q_AURjJeJD"}; /* вставь адрес и ключ Supabase, см. SETUP.md */

@@ -288,6 +288,7 @@ button,.days button,.chips button{touch-action:manipulation;-webkit-tap-highligh
 
 <script>
 window.onerror=function(m,u,l){try{var t=document.getElementById("toast");if(t){t.textContent="Ошибка: "+m+" (строка "+l+"). Сделай скриншот и пришли мне.";t.style.display="block"}}catch(e){}return false};
+(function(){
 
 var $=function(i){return document.getElementById(i)};
 function esc(s){var d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML}
@@ -302,15 +303,15 @@ function curWeek(){if(!anc)return "up";return (wkIdx()-anc.w)%2===0?anc.t:(anc.t
 function m(s){var a=String(s).split(":");return (+a[0]||0)*60+(+a[1]||0)}
 function f(x){return String(Math.floor(x/60)).padStart(2,"0")+":"+String(x%60).padStart(2,"0")}
 
-function head(){
+function renderHead(){
   var dt=new Date(),cw=curWeek();
   $("wk").innerHTML='<button data-w="up" class="'+(anc&&cw==="up"?"on":"")+'">Верхняя неделя</button><button data-w="down" class="'+(anc&&cw==="down"?"on":"")+'">Нижняя неделя</button>';
   $("wkm").textContent=anc?"Сейчас идёт "+(cw==="up"?"верхняя":"нижняя")+" неделя. Дальше они чередуются сами.":"Нажми нужную неделю — расписание переключится сразу. Затем недели будут чередоваться автоматически.";
-  Array.prototype.forEach.call(document.querySelectorAll("#wk button"),function(b){b.onclick=function(){anc={w:wkIdx(),t:b.dataset.w};sv("anc",anc);head();draw();$("out").innerHTML=""}});
+  Array.prototype.forEach.call(document.querySelectorAll("#wk button"),function(b){b.onclick=function(){anc={w:wkIdx(),t:b.dataset.w};sv("anc",anc);renderHead();draw();$("out").innerHTML=""}});
   $("h").textContent=sel===today?"Сегодня":DN[sel-1];
   $("sub").textContent=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()+sel-today).toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"});
   $("days").innerHTML=DN.map(function(n,i){return '<button data-d="'+(i+1)+'" class="'+(sel===i+1?"on":"")+'">'+n+'</button>'}).join("");
-  Array.prototype.forEach.call(document.querySelectorAll("#days button"),function(b){b.onclick=function(){sel=+b.dataset.d;head();draw();$("out").innerHTML=""}});
+  Array.prototype.forEach.call(document.querySelectorAll("#days button"),function(b){b.onclick=function(){sel=+b.dataset.d;renderHead();draw();$("out").innerHTML=""}});
 }
 var skipped=ld("reu_skipped_v2",{});
 function selectedDate(){
@@ -401,7 +402,7 @@ function nstate(){var n=$("ns");if(!("Notification" in window)){n.textContent="�
 $("nb").onclick=function(){try{Notification.requestPermission().then(nstate)}catch(e){nstate()}};
 setInterval(check,30000);document.addEventListener("visibilitychange",function(){if(!document.hidden)check()});
 drawBells();if(grp){build();$("msg").textContent="Группа "+grp+", пар за неделю: "+lessons.length;$("grp").value=grp}
-head();draw();tab(1);try{nstate()}catch(e){}try{check()}catch(e){}
+renderHead();draw();tab(1);try{nstate()}catch(e){}try{check()}catch(e){}
 
 /* ===== Заметки группы ===== */
 var SHARED={url:"https://oztzraoyefxedeodmnrn.supabase.co/rest/v1/",key:"sb_publishable_maXcKixbhKd8erkQEjje1Q_AURjJeJD"}; /* вставь адрес и ключ Supabase, см. SETUP.md */
@@ -467,6 +468,8 @@ setInterval(function(){var v=$("v4");if(v&&!v.hidden){if(sh())listNotes()}else c
 document.addEventListener("visibilitychange",function(){if(!document.hidden)checkNew()});
 if(!grp)obShow();else checkNew();
 try{if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")}catch(e){}
+
+})();
 </script>
 </body>
 </html>
